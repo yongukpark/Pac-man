@@ -1,0 +1,4 @@
+﻿  소스.cpp
+C:\Users\Administrator\Documents\GitHub\Pac-man\Pac-man\Internet.h(10,16): warning C4838: 'int'에서 'SHORT'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\Administrator\Documents\GitHub\Pac-man\Pac-man\Internet.h(10,20): warning C4838: 'int'에서 'SHORT'(으)로의 변환에는 축소 변환이 필요합니다.
+  Pac-man.vcxproj -> C:\Users\Administrator\Documents\GitHub\Pac-man\Debug\Pac-man.exe
