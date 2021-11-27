@@ -1,9 +1,30 @@
 #include "Internet.h"
 using namespace std;
 
+void map(int a,int b) { //40,20
+	gotoxy(50 - a / 2, 15 - b / 2); // Y : 5 시작
+	for (int i = 0; i < a/2; i++) { 
+		cout << "■";
+	}
+	for (int i = 1 ; i <= b; i++) { // X : 30 시작
+		gotoxy(50 - a / 2, 15 - b / 2 + i); 
+		cout << "■*|_____|";
+		gotoxy(50 + a / 2 - 2, 15 - b / 2 + i); // X : 68 끝 / X : 32~67 사용가능
+		cout << "■";
+	}
+	gotoxy(50 - a / 2, 15 + b / 2 + 1); // Y : 26 끝 / Y : 6~25 사용가능
+	for (int i = 0; i < a/2; i++) {
+		cout << "■";
+	}
+	// 일반화시켜서
+	//Y : 15-b/2+1 ~ 15+b/2 사용가능
+	//X : 50-a/2+2 ~ 50+a/2-1 사용가능
+
+}
+
 void round1() {
 	system("cls");
-	cout << "ROUND1";
+	map(40,20);
 }
 
 void round2() {
@@ -83,10 +104,6 @@ void startMenu() {
 		system("cls");
 		return;
 	}
-}
-
-void map() {
-	system("cls");
 }
 
 int main() {
