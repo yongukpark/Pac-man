@@ -1,30 +1,68 @@
 #include "Internet.h"
+#include <fcntl.h>
+#include <io.h>
 using namespace std;
 
-void map(int a,int b) { //40,20
-	gotoxy(50 - a / 2, 15 - b / 2); // Y : 5 시작
+
+
+
+const char round1Arr[9][16] = { ' ',	' ',	' ',	' ',	'|',	' ',	' ',	' ',	' ',	' ',	' ',	'|',	' ',	' ',	' ',	' ',
+								' ' ,	'-',	'-',	' ',	'|',	' ',	'-',	'-',	'-',	'-',	' ',	'|',	' ',	'-',	'-',	' ',
+								' ',	'|',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	'|',	' ',
+								' ',	'|',	' ',	'-',	'-',	' ',	'-',	'*',	'*',	'-',	' ',	'-',	'-',	' ',	'|',	' ',
+								' ',	' ',	' ',	' ',	' ',	' ',	'|',	'*',	'*',	'|',	' ',	' ',	' ',	' ',	' ',	' ',
+								' ',	'|',	' ',	'-',	'-',	' ',	'-',	'-',	'-',	'-',	' ',	'-',	'-',	' ',	'|',	' ',
+								' ',	'|',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	'|',	' ',
+								' ',	'-',	'-',	' ',	'|',	' ',	'-',	'-',	'-',	'-',	' ',	'|',	' ',	'-',	'-',	' ',
+								' ',	' ',	' ',	' ',	'|',	' ',	' ',	' ',	' ',	' ',	' ',	'|',	' ',	' ',	' ',	' '};
+
+
+
+void round1Map() {
+	for (int row = 0; row < 9; row++) {
+		gotoxy(42, 12 + row);
+		for (int col = 0; col < 16; col++) {
+
+			if(round1Arr[row][col]=='*') {
+				cout << ' ';
+			}
+			else if (round1Arr[row][col] != ' ') {
+				cout << round1Arr[row][col];
+			}
+			else {
+				cout << "*";
+			}
+		}
+	}
+	int a;
+	cin >> a;
+}
+
+void universialMap(int a,int b) { 
+	gotoxy(50 - a / 2, 15 - b / 2); 
 	for (int i = 0; i < a/2; i++) { 
 		cout << "■";
 	}
-	for (int i = 1 ; i <= b; i++) { // X : 30 시작
+	for (int i = 1 ; i <= b; i++) { 
 		gotoxy(50 - a / 2, 15 - b / 2 + i); 
-		cout << "■*|_____|";
-		gotoxy(50 + a / 2 - 2, 15 - b / 2 + i); // X : 68 끝 / X : 32~67 사용가능
+		cout << "■";
+		gotoxy(50 + a / 2 - 2, 15 - b / 2 + i); 
 		cout << "■";
 	}
-	gotoxy(50 - a / 2, 15 + b / 2 + 1); // Y : 26 끝 / Y : 6~25 사용가능
+	gotoxy(50 - a / 2, 15 + b / 2 + 2); 
 	for (int i = 0; i < a/2; i++) {
 		cout << "■";
 	}
 	// 일반화시켜서
 	//Y : 15-b/2+1 ~ 15+b/2 사용가능
 	//X : 50-a/2+2 ~ 50+a/2-1 사용가능
-
 }
 
 void round1() {
 	system("cls");
-	map(40,20);
+	universialMap(20,9);
+	round1Map();
+
 }
 
 void round2() {
@@ -40,7 +78,8 @@ void scoreBoard() {
 }
 
 void exit_game() {
-	cout << "EXIT";
+
+	exit(0);
 }
 
 void mainMenu() {
@@ -107,6 +146,7 @@ void startMenu() {
 }
 
 int main() {
+
 	system(" mode  con lines=30   cols=100 "); //콘솔창 크키 바꾸기
 	startMenu(); //Pac-Man 출력
 	mainMenu(); //선택화면 표시
