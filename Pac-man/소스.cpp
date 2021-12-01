@@ -7,15 +7,22 @@ using namespace std;
 
 #define round1_start_x 30
 #define round1_start_y 6
-#define round1_end_x 68
-#define round1_end_y 16
+#define round1_end_x 66
+#define round1_end_y 14
 
 void gotoxy(int x, int y) {
 	COORD Pos = { x , y };
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Pos);
 }
 
-//const char round1Arr[9][16] = {' ',	' ',	' ',	' ',	'|',	' ',	' ',	' ',	' ',	' ',	' ',	'|',	' ',	' ',	' ',	' ',
+void CursorView(){
+	CONSOLE_CURSOR_INFO cursorInfo = { 0, };
+	cursorInfo.dwSize = 1; //커서 굵기 (1 ~ 100)
+	cursorInfo.bVisible = FALSE; //커서 Visible TRUE(보임) FALSE(숨김)
+	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+}
+
+//const char round1Map[9][16] = {' ',	' ',	' ',	' ',	'|',	' ',	' ',	' ',	' ',	' ',	' ',	'|',	' ',	' ',	' ',	' ',
 //								' ' ,	'-',	'-',	' ',	'|',	' ',	'-',	'-',	'-',	'-',	' ',	'|',	' ',	'-',	'-',	' ',
 //								' ',	'|',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	'|',	' ',
 //								' ',	'|',	' ',	'-',	'-',	' ',	'-',	'*',	'*',	'-',	' ',	'-',	'-',	' ',	'|',	' ',
@@ -25,7 +32,7 @@ void gotoxy(int x, int y) {
 //								' ',	'-',	'-',	' ',	'|',	' ',	'-',	'-',	'-',	'-',	' ',	'|',	' ',	'-',	'-',	' ',
 //								' ',	' ',	' ',	' ',	'|',	' ',	' ',	' ',	' ',	' ',	' ',	'|',	' ',	' ',	' ',	' '};
 
-//const char round1Arr[9][16] = { ' ',	' ',	' ',	' ',	'#',	' ',	' ',	' ',	' ',	' ',	' ',	'#',	' ',	' ',	' ',	' ',
+//const char round1Map[9][16] = { ' ',	' ',	' ',	' ',	'#',	' ',	' ',	' ',	' ',	' ',	' ',	'#',	' ',	' ',	' ',	' ',
 //								' ' ,	'#',	'#',	' ',	'#',	' ',	'#',	'#',	'#',	'#',	' ',	'#',	' ',	'#',	'#',	' ',
 //								' ',	'#',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	'#',	' ',
 //								' ',	'#',	' ',	'#',	'#',	' ',	'#',	'*',	'*',	'#',	' ',	'#',	'#',	' ',	'#',	' ',
@@ -36,31 +43,31 @@ void gotoxy(int x, int y) {
 //								' ',	' ',	' ',	' ',	'#',	' ',	' ',	' ',	' ',	' ',	' ',	'#',	' ',	' ',	' ',	' ' };
 //
 
-char round1Arr[11][21];
+char round1Map[11][21];
 
-void setRound1Arr(char round1Arr[11][21]) {
-	strcpy_s(round1Arr[0], "11111111111111111111");
-	strcpy_s(round1Arr[1], "10000100000000100001");
-	strcpy_s(round1Arr[2], "10110101111110101101");
-	strcpy_s(round1Arr[3], "10100000000000000101");
-	strcpy_s(round1Arr[4], "10101101100110110101");
-	strcpy_s(round1Arr[5], "10000001000010000001");
-	strcpy_s(round1Arr[6], "10101101111110110101");
-	strcpy_s(round1Arr[7], "10100000000000000101");	
-	strcpy_s(round1Arr[8], "10110101111110101101");
-	strcpy_s(round1Arr[9], "10000100000000100001");
-	strcpy_s(round1Arr[10],"11111111111111111111");
+void setround1Map(char round1Map[11][21]) {
+	strcpy_s(round1Map[0], "11111111111111111111");
+	strcpy_s(round1Map[1], "10000100000000100001");
+	strcpy_s(round1Map[2], "10110101111110101101");
+	strcpy_s(round1Map[3], "10100000000000000101");
+	strcpy_s(round1Map[4], "10101101100110110101");
+	strcpy_s(round1Map[5], "10000001000010000001");
+	strcpy_s(round1Map[6], "10101101111110110101");
+	strcpy_s(round1Map[7], "10100000000000000101");	
+	strcpy_s(round1Map[8], "10110101111110101101");
+	strcpy_s(round1Map[9], "10000100000000100001");
+	strcpy_s(round1Map[10],"11111111111111111111");
 }
 
-void round1Map() {
+void showround1Map() {
 	for (int row = 0; row < 11; row++) { 
 		gotoxy(round1_start_x-1, round1_start_y-1 + row);
 		for (int col = 0; col < 20; col++) {
-			if(round1Arr[row][col]=='1') {
+			if(round1Map[row][col]=='1') {
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
 				cout << "■";
 			}
-			else if(round1Arr[row][col]=='0') {
+			else if(round1Map[row][col]=='0') {
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 				cout << "ㆍ";
 			}
@@ -72,37 +79,83 @@ void round1Map() {
 	}
 }
 
+void checkRound1Map() {
 
+}
+
+void moveRound1(int& x, int& y) {
+	char a = _getch();
+	switch (a){
+	case 'w':
+	case 'W':
+		if ((y - 1) >= round1_start_y && round1Map[y - round1_start_y][(x - round1_start_x)/2+1] != '1') {
+
+			y--;
+			showround1Map();
+			gotoxy(x, y);
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
+			cout << "●";
+		}
+		break;
+	case 's':
+	case 'S':
+		if ((y + 1) <= round1_end_y && round1Map[y - round1_start_y + 2][(x - round1_start_x) / 2 + 1] != '1') {
+
+			y++;
+			showround1Map();
+			gotoxy(x, y);
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
+			cout << "●";
+		}
+		break;
+	case 'a':
+	case 'A':
+		if ((x - 2) >= round1_start_x && round1Map[y - round1_start_y + 1][(x - 2 - round1_start_x) / 2 + 1] != '1') {
+
+			x-=2;
+			showround1Map();
+			gotoxy(x, y);
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
+			cout << "●";
+		}
+		break;
+	case 'd':
+	case 'D':
+		if ((x + 2) < round1_end_x && round1Map[y - round1_start_y + 1][(x + 2 - round1_start_x) / 2 + 1] != '1') {
+
+			x+=2;
+			showround1Map();
+			gotoxy(x, y);
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
+			cout << "●";
+		}
+		break;
+	default:
+		break;
+	}
+}
 
 void round1() {
 	system("cls");
-	setRound1Arr(round1Arr);
-	round1Map();
-
-	round1Arr[7][8] = '2';
-	round1Map();
+	setround1Map(round1Map);
+	round1Map[7][8] = '2';
+	showround1Map();
+	
 	gotoxy(round1_start_x + 15, round1_start_y+6);
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
 	cout << "●";
-	Sleep(300);
 
-	round1Arr[7][7] = '2';
-	round1Map();
-	gotoxy(round1_start_x + 13, round1_start_y + 6);
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
-	cout << "●";
-	Sleep(300);
+	int x = 45;
+	int y = 12;
+	while (1) {
+		moveRound1(x, y);
+	}
 
-	round1Arr[7][6] = '2';
-	round1Map();
-	gotoxy(round1_start_x + 11, round1_start_y + 6);
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
-	cout << "●";
-	Sleep(300);
+
 }
 
 void round2() {
-	cout << "ROUND2";
+	cout << "ROUND2";	
 }
 
 void round3() {
@@ -182,6 +235,7 @@ void startMenu() {
 }
 
 int main() {
+	CursorView();
 	system(" mode  con lines=30   cols=100 "); //콘솔창 크키 바꾸기
 	startMenu(); //Pac-Man 출력
 	mainMenu(); //선택화면 표시
