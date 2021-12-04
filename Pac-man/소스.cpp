@@ -5,10 +5,30 @@
 
 using namespace std;
 
-#define round1_start_x 30
-#define round1_start_y 6
-#define round1_end_x 66
-#define round1_end_y 14
+char** roundMap;
+//맵 이동가능 범위
+int start_x;
+int start_y;
+int end_x;
+int end_y;
+//현재 팩맨 위치
+int current_x;
+int current_y;
+char head; //팩맨이 가는 위치
+
+const char round1Map[11][21] =  { // 9 * 18 31~69/
+	"11111111111111111111",
+	"10000100000000100001",
+	"10110101111110101101",
+	"10100000000000000101",
+	"10101101133110110101",
+	"10000001333310000001",
+	"10101101111110110101",
+	"10100000020000000101",
+	"10110101111110101101",
+	"10000100000000100001",
+	"11111111111111111111"
+};
 
 void gotoxy(int x, int y) {
 	COORD Pos = { x , y };
@@ -22,136 +42,181 @@ void CursorView(){
 	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
 }
 
-//const char round1Map[9][16] = {' ',	' ',	' ',	' ',	'|',	' ',	' ',	' ',	' ',	' ',	' ',	'|',	' ',	' ',	' ',	' ',
-//								' ' ,	'-',	'-',	' ',	'|',	' ',	'-',	'-',	'-',	'-',	' ',	'|',	' ',	'-',	'-',	' ',
-//								' ',	'|',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	'|',	' ',
-//								' ',	'|',	' ',	'-',	'-',	' ',	'-',	'*',	'*',	'-',	' ',	'-',	'-',	' ',	'|',	' ',
-//								' ',	' ',	' ',	' ',	' ',	' ',	'|',	'*',	'*',	'|',	' ',	' ',	' ',	' ',	' ',	' ',
-//								' ',	'|',	' ',	'-',	'-',	' ',	'-',	'-',	'-',	'-',	' ',	'-',	'-',	' ',	'|',	' ',
-//								' ',	'|',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	'|',	' ',
-//								' ',	'-',	'-',	' ',	'|',	' ',	'-',	'-',	'-',	'-',	' ',	'|',	' ',	'-',	'-',	' ',
-//								' ',	' ',	' ',	' ',	'|',	' ',	' ',	' ',	' ',	' ',	' ',	'|',	' ',	' ',	' ',	' '};
 
-//const char round1Map[9][16] = { ' ',	' ',	' ',	' ',	'#',	' ',	' ',	' ',	' ',	' ',	' ',	'#',	' ',	' ',	' ',	' ',
-//								' ' ,	'#',	'#',	' ',	'#',	' ',	'#',	'#',	'#',	'#',	' ',	'#',	' ',	'#',	'#',	' ',
-//								' ',	'#',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	'#',	' ',
-//								' ',	'#',	' ',	'#',	'#',	' ',	'#',	'*',	'*',	'#',	' ',	'#',	'#',	' ',	'#',	' ',
-//								' ',	' ',	' ',	' ',	' ',	' ',	'#',	'*',	'*',	'#',	' ',	' ',	' ',	' ',	' ',	' ',
-//								' ',	'#',	' ',	'#',	'#',	' ',	'#',	'#',	'#',	'#',	' ',	'#',	'#',	' ',	'#',	' ',
-//								' ',	'#',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	' ',	'#',	' ',
-//								' ',	'#',	'#',	' ',	'#',	' ',	'#',	'#',	'#',	'#',	' ',	'#',	' ',	'#',	'#',	' ',
-//								' ',	' ',	' ',	' ',	'#',	' ',	' ',	' ',	' ',	' ',	' ',	'#',	' ',	' ',	' ',	' ' };
-//
-
-char round1Map[11][21];
-
-void setround1Map(char round1Map[11][21]) {
-	strcpy_s(round1Map[0], "11111111111111111111");
-	strcpy_s(round1Map[1], "10000100000000100001");
-	strcpy_s(round1Map[2], "10110101111110101101");
-	strcpy_s(round1Map[3], "10100000000000000101");
-	strcpy_s(round1Map[4], "10101101100110110101");
-	strcpy_s(round1Map[5], "10000001000010000001");
-	strcpy_s(round1Map[6], "10101101111110110101");
-	strcpy_s(round1Map[7], "10100000000000000101");	
-	strcpy_s(round1Map[8], "10110101111110101101");
-	strcpy_s(round1Map[9], "10000100000000100001");
-	strcpy_s(round1Map[10],"11111111111111111111");
+void setRound1Map(char** &roundMap) {
+	roundMap = new char* [11];
+	for (int i = 0; i < 11; i++) {
+		roundMap[i] = new char[21];
+	}
+	for (int i = 0; i < 11; i++) {
+		for (int j = 0; j < 21; j++) {
+			roundMap[i][j] = round1Map[i][j];
+		}
+	}
+	//콘솔창에서의 인덱스 - 몬스터용
+	::start_x = 33;
+	::end_x = 67;
+	::start_y = 6;
+	::end_y = 14;
+	//2차원 배열에서의 인덱스 - 팩맨용
+	::current_x = 7;
+	::current_y = 9;
 }
 
-void showround1Map() {
+void setRound2Map(){}
+void setRound3Map(){}
+
+void showMap() {
 	for (int row = 0; row < 11; row++) { 
-		gotoxy(round1_start_x-1, round1_start_y-1 + row);
+		gotoxy(start_x-2, start_y-1 + row);
 		for (int col = 0; col < 20; col++) {
-			if(round1Map[row][col]=='1') {
+			if(roundMap[row][col]=='1') {
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
-				cout << "■";
+				cout << "■"; //벽
 			}
-			else if(round1Map[row][col]=='0') {
+			else if(roundMap[row][col]=='0') {
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
-				cout << "ㆍ";
+				cout << "ㆍ"; //동전
+			}
+			else if(roundMap[row][col]=='2'){
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
+				cout << "●"; //팩맨
 			}
 			else {
-				cout << "  ";
+				cout << "  "; //공백
 			}
 		}
 		cout << '\n';
 	}
 }
 
-void checkRound1Map() {
-
+bool checkMap(const int x, const int y) {
+	for (int i = 1; i < x - 1; i++) {
+		for (int j = 1; j < y - 1; j++) {
+			roundMap[i][j] = '0';
+			return false;
+		}
+	}
+	return true;
 }
 
-void moveRound1(int& x, int& y) {
-	char a = _getch();
-	switch (a){
+void moveRound(const int x, const int y) {
+	char a;
+	if (_kbhit()) {
+		a = _getch();
+		switch (a) {
+		case 'w':
+		case 'W':
+			if ((current_x - 1) >= 1 && roundMap[current_x - 1][current_y] != '1') {
+				roundMap[current_x][current_y] = '3';
+				current_x--;
+				roundMap[current_x][current_y] = '2';
+				head = 'w';
+				return;
+			}
+			break;
+		case 's':
+		case 'S':
+			if ((current_x + 1) <= (x - 1) && roundMap[current_x + 1][current_y] != '1') {
+				roundMap[current_x][current_y] = '3';
+				current_x++;
+				roundMap[current_x][current_y] = '2';
+				head = 's';
+				return;
+			}
+			break;
+		case 'a':
+		case 'A':
+			if ((current_y - 1) >= 1 && roundMap[current_x][current_y - 1] != '1') {
+				roundMap[current_x][current_y] = '3';
+				current_y--;
+				roundMap[current_x][current_y] = '2';
+				head = 'a';
+				return;
+			}
+			break;
+		case 'd':
+		case 'D':
+			if ((current_y + 1) <= (y - 1) && roundMap[current_x][current_y + 1] != '1') {
+				roundMap[current_x][current_y] = '3';
+				current_y++;
+				roundMap[current_x][current_y] = '2';
+				head = 'd';
+				return;
+			}
+			break;
+		default:
+			break;
+		}
+	}
+
+	a = head;
+	switch (a) {
 	case 'w':
 	case 'W':
-		if ((y - 1) >= round1_start_y && round1Map[y - round1_start_y][(x - round1_start_x)/2+1] != '1') {
-
-			y--;
-			showround1Map();
-			gotoxy(x, y);
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
-			cout << "●";
+		if ((current_x - 1) >= 1 && roundMap[current_x - 1][current_y] != '1') {
+			roundMap[current_x][current_y] = '3';
+			current_x--;
+			roundMap[current_x][current_y] = '2';
+			head = 'w';
 		}
 		break;
 	case 's':
 	case 'S':
-		if ((y + 1) <= round1_end_y && round1Map[y - round1_start_y + 2][(x - round1_start_x) / 2 + 1] != '1') {
-
-			y++;
-			showround1Map();
-			gotoxy(x, y);
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
-			cout << "●";
+		if ((current_x + 1) <= (x - 1) && roundMap[current_x + 1][current_y] != '1') {
+			roundMap[current_x][current_y] = '3';
+			current_x++;
+			roundMap[current_x][current_y] = '2';
+			head = 's';
 		}
 		break;
 	case 'a':
 	case 'A':
-		if ((x - 2) >= round1_start_x && round1Map[y - round1_start_y + 1][(x - 2 - round1_start_x) / 2 + 1] != '1') {
-
-			x-=2;
-			showround1Map();
-			gotoxy(x, y);
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
-			cout << "●";
+		if ((current_y - 1) >= 1 && roundMap[current_x][current_y - 1] != '1') {
+			roundMap[current_x][current_y] = '3';
+			current_y--;
+			roundMap[current_x][current_y] = '2';
+			head = 'a';
 		}
 		break;
 	case 'd':
 	case 'D':
-		if ((x + 2) < round1_end_x && round1Map[y - round1_start_y + 1][(x + 2 - round1_start_x) / 2 + 1] != '1') {
-
-			x+=2;
-			showround1Map();
-			gotoxy(x, y);
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
-			cout << "●";
+		if ((current_y + 1) <= (y - 1) && roundMap[current_x][current_y + 1] != '1') {
+			roundMap[current_x][current_y] = '3';
+			current_y++;
+			roundMap[current_x][current_y] = '2';
+			head = 'd';
 		}
 		break;
 	default:
 		break;
 	}
+
+}
+
+void successGame() {
+	cout << "성공";
 }
 
 void round1() {
 	system("cls");
-	setround1Map(round1Map);
-	round1Map[7][8] = '2';
-	showround1Map();
-	
-	gotoxy(round1_start_x + 15, round1_start_y+6);
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
-	cout << "●";
+	setRound1Map(roundMap);
+	showMap();
 
-	int x = 45;
-	int y = 12;
 	while (1) {
-		moveRound1(x, y);
+		moveRound(11,20);
+		showMap();
+		if (checkMap(11, 20)) {
+			successGame();
+			break;
+		}
+		Sleep(70);
 	}
 
-
+	for (int i = 0; i < 11; i++) {
+		delete[] roundMap[i];
+	}
+	delete[] roundMap;
 }
 
 void round2() {
@@ -240,7 +305,6 @@ int main() {
 	startMenu(); //Pac-Man 출력
 	mainMenu(); //선택화면 표시
 
-	int a;
-	cin >> a;
+	int a; cin >> a;
 }
 

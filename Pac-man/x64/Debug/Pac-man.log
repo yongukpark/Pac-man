@@ -1,4 +1,4 @@
 ﻿  소스.cpp
-C:\Users\Administrator\Documents\GitHub\Pac-man\Pac-man\소스.cpp(14,16): warning C4838: 'int'에서 'SHORT'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\Administrator\Documents\GitHub\Pac-man\Pac-man\소스.cpp(14,20): warning C4838: 'int'에서 'SHORT'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\Administrator\Documents\GitHub\Pac-man\Pac-man\소스.cpp(34,16): warning C4838: 'int'에서 'SHORT'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\Administrator\Documents\GitHub\Pac-man\Pac-man\소스.cpp(34,20): warning C4838: 'int'에서 'SHORT'(으)로의 변환에는 축소 변환이 필요합니다.
   Pac-man.vcxproj -> C:\Users\Administrator\Documents\GitHub\Pac-man\x64\Debug\Pac-man.exe
