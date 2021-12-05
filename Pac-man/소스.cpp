@@ -93,8 +93,9 @@ void showMap() {
 bool checkMap(const int x, const int y) {
 	for (int i = 1; i < x - 1; i++) {
 		for (int j = 1; j < y - 1; j++) {
-			roundMap[i][j] = '0';
-			return false;
+			if (roundMap[i][j] == '0') {
+				return false;
+			}
 		}
 	}
 	return true;
@@ -104,53 +105,11 @@ void moveRound(const int x, const int y) {
 	char a;
 	if (_kbhit()) {
 		a = _getch();
-		switch (a) {
-		case 'w':
-		case 'W':
-			if ((current_x - 1) >= 1 && roundMap[current_x - 1][current_y] != '1') {
-				roundMap[current_x][current_y] = '3';
-				current_x--;
-				roundMap[current_x][current_y] = '2';
-				head = 'w';
-				return;
-			}
-			break;
-		case 's':
-		case 'S':
-			if ((current_x + 1) <= (x - 1) && roundMap[current_x + 1][current_y] != '1') {
-				roundMap[current_x][current_y] = '3';
-				current_x++;
-				roundMap[current_x][current_y] = '2';
-				head = 's';
-				return;
-			}
-			break;
-		case 'a':
-		case 'A':
-			if ((current_y - 1) >= 1 && roundMap[current_x][current_y - 1] != '1') {
-				roundMap[current_x][current_y] = '3';
-				current_y--;
-				roundMap[current_x][current_y] = '2';
-				head = 'a';
-				return;
-			}
-			break;
-		case 'd':
-		case 'D':
-			if ((current_y + 1) <= (y - 1) && roundMap[current_x][current_y + 1] != '1') {
-				roundMap[current_x][current_y] = '3';
-				current_y++;
-				roundMap[current_x][current_y] = '2';
-				head = 'd';
-				return;
-			}
-			break;
-		default:
-			break;
-		}
+	}
+	else {
+		a = head;
 	}
 
-	a = head;
 	switch (a) {
 	case 'w':
 	case 'W':
@@ -195,6 +154,8 @@ void moveRound(const int x, const int y) {
 }
 
 void successGame() {
+	system("cls");
+	gotoxy(50, 10);
 	cout << "¼º°ø";
 }
 
