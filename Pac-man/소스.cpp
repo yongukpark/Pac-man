@@ -7,15 +7,17 @@
 #include <vector>
 #include <utility>
 #include <algorithm>
+
 void mainMenu();
 void exit_game();
 void scoreBoard();
 void round1();
 void round2();
 void round3();
-
+void countDown();
 using namespace std;
 
+// 맵
 char** roundMap;
 // 현재 팩맨 위치
 int current_x;
@@ -31,6 +33,7 @@ int end_y;
 // 팩맨이 가는 방향
 char head; 
 
+
 void gotoxy(int x, int y) {
 	COORD Pos = { x , y };
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Pos);
@@ -43,6 +46,11 @@ void CursorView() {
 	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
 }
 
+bool compare(pair<string, int> p1, pair<string, int> p2) {
+	return p1.second < p2.second;
+}
+
+// round1 settings
 const char round1Map[11][21] =  { // 9 * 18 31~69/
 	"11111111111111111111",
 	"10000100000000100001",
@@ -90,10 +98,119 @@ void setRound1Monster(int**& arr) {
 	monsterNum = 2;
 }
 
-void setRound2Map(){}
+// round2 settings
+const char round2Map[11][21] = { // 9 * 18 31~69/
+	"11111111111111111111",
+	"10000100000000100001",
+	"10110101111110101101",
+	"10100004040400000101",
+	"10101101100110110101",
+	"10000001000010000001",
+	"10101101111110110101",
+	"10100000020000000101",
+	"10110101111110101101",
+	"10000100000000100001",
+	"11111111111111111111"
+};
 
-void setRound3Map(){}
+void setRound2Map(char**& roundMap) {
+	roundMap = new char* [11];
+	for (int i = 0; i < 11; i++) {
+		roundMap[i] = new char[21];
+	}
+	for (int i = 0; i < 11; i++) {
+		for (int j = 0; j < 21; j++) {
+			roundMap[i][j] = round2Map[i][j];
+		}
+	}
 
+	//2차원 배열에서의 인덱스 - 팩맨용
+	::start_x = 33;
+	::start_y = 6;
+	::end_x = 67;
+	::end_y = 14;
+	::current_x = 7;
+	::current_y = 9;
+	head = 'b';
+}
+
+void setRound2Monster(int**& arr) {
+	arr = new int* [3];
+	for (int i = 0; i < 3; i++) {
+		arr[i] = new int[2];
+	}
+	arr[0][0] = 3;
+	arr[0][1] = 7;
+	arr[1][0] = 3;
+	arr[1][1] = 9;
+	arr[2][0] = 3;
+	arr[2][1] = 11;
+	monsterNum = 3;
+}
+
+// round3 settings
+const char round3Map[21][29] = {
+	"1111111111111111111111111111",
+	"1000000000000000000000000001",
+	"1011110110111111110110111101",
+	"1011110110111111110110111101",
+	"1000000110000110000110000001",
+	"1111110111110110111110111111",
+	"1111110111110110111110111111",
+	"1111110110404040400110111111",
+	"1111110110110110110110111111",
+	"1111110110100000010110111111",
+	"1111110000100000010000111111",
+	"1111110110100000010110111111",
+	"1111110110111111110110111111",
+	"1111110110000200000110111111",
+	"1111110111110110111110111111",
+	"1111110111110110111110111111",
+	"1000000110000110000110000001",
+	"1011110110111111110110111101",
+	"1011110110111111110110111101",
+	"1000000000000000000000000001",
+	"1111111111111111111111111111"
+};
+
+void setRound3Map(char** &roundMap){
+	roundMap = new char* [21];
+	for (int i = 0; i < 21; i++) {
+		roundMap[i] = new char[29];
+	}
+	for (int i = 0; i < 21; i++) {
+		for (int j = 0; j < 29; j++) {
+			roundMap[i][j] = round3Map[i][j];
+		}
+	}
+
+	//2차원 배열에서의 인덱스 - 팩맨용
+	::start_x = 25;
+	::start_y = 6;
+	::end_x = 75;
+	::end_y = 24;
+	::current_x = 13;
+	::current_y = 13;
+	head = 'b';
+}
+
+void setRound3Monster(int**& arr) {
+	arr = new int* [4];
+	for (int i = 0; i < 4; i++) {
+		arr[i] = new int[2];
+	}
+	arr[0][0] = 7;
+	arr[0][1] = 10;
+	arr[1][0] = 7;
+	arr[1][1] = 12;
+	arr[2][0] = 7;
+	arr[2][1] = 14;
+	arr[3][0] = 7;
+	arr[3][1] = 16;
+	monsterNum = 4;
+}
+
+// 게임 플레이 요소
 void showMap(const int x, const int y) {
 	for (int row = 0; row < x; row++) { 
 		gotoxy(start_x-2, start_y-1 + row);
@@ -343,6 +460,51 @@ bool moveMonster(const int x, const int y) {
 	return true;
 }
 
+void countDown() {
+	system("cls");
+	gotoxy(47, 10);
+	cout << " _____ ";
+	gotoxy(47, 11);
+	cout << "|____ |";
+	gotoxy(47, 12);
+	cout << "    / /";
+	gotoxy(47, 13);
+	cout << "    ＼＼";
+	gotoxy(47, 14);
+	cout << ".___/  /";
+	gotoxy(47, 15);
+	cout << "＼____/ ";
+	Sleep(1000);
+	system("cls");
+	gotoxy(47, 10);
+	cout << "  _____ ";
+	gotoxy(47, 11);
+	cout << " / __ ＼";
+	gotoxy(47, 12);
+	cout << " `' / /'";
+	gotoxy(47, 13);
+	cout << "   / /  ";
+	gotoxy(47, 14);
+	cout << " ./ /___";
+	gotoxy(47, 15);
+	cout << "＼_____/";
+	Sleep(1000);
+	system("cls");
+	gotoxy(47, 10);
+	cout << "  __  ";
+	gotoxy(47, 11);
+	cout << " /  | ";
+	gotoxy(47, 12);
+	cout << " `| | ";
+	gotoxy(47, 13);
+	cout << "  | | ";
+	gotoxy(47, 14);
+	cout << " _| |_";
+	gotoxy(47, 15);
+	cout << "＼___/";
+	Sleep(1000);
+}
+
 int successGame() {
 	system("cls");
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
@@ -418,7 +580,9 @@ int failGame() {
 
 }
 
+// select menu
 void round1() {
+	countDown();
 	clock_t start_clk = clock();
 	system("cls");
 	setRound1Map(roundMap);
@@ -430,6 +594,11 @@ void round1() {
 				delete[] roundMap[i];
 			}
 			delete[] roundMap;
+
+			for (int i = 0; i < 2; i++) {
+				delete[] monsterArr[i];
+			}
+			delete monsterArr;
 
 			int a = failGame();
 			if (a == 1) {
@@ -453,6 +622,11 @@ void round1() {
 			}
 			delete[] roundMap;
 
+			for (int i = 0; i < 2; i++) {
+				delete[] monsterArr[i];
+			}
+			delete monsterArr;
+
 			int a = failGame();
 			if (a == 1) {
 				return round1();
@@ -475,6 +649,12 @@ void round1() {
 				delete[] roundMap[i];
 			}
 			delete[] roundMap;
+
+			for (int i = 0; i < 2; i++) {
+				delete[] monsterArr[i];
+			}
+			delete monsterArr;
+
 			clock_t end_clk = clock();
 
 			system("cls");
@@ -512,20 +692,229 @@ void round1() {
 }
 
 void round2() {
-	cout << "ROUND2";	
+	countDown();
+	clock_t start_clk = clock();
+	system("cls");
+	setRound2Map(roundMap);
+	setRound2Monster(monsterArr);
+	showMap(11, 20);
+	while (1) {
+		if (!movePacMan(11, 20)) {
+			for (int i = 0; i < 11; i++) {
+				delete[] roundMap[i];
+			}
+			delete[] roundMap;
+
+			for (int i = 0; i < 3; i++) {
+				delete[] monsterArr[i];
+			}
+			delete monsterArr;
+
+			int a = failGame();
+			if (a == 1) {
+				return round2();
+			}
+			else if (a == 2) {
+				return mainMenu();
+			}
+			else if (a == 3) {
+				return scoreBoard();
+			}
+			else {
+				return exit_game();
+			}
+			break;
+		};
+		if (!moveMonster(11, 20)) {
+
+			for (int i = 0; i < 11; i++) {
+				delete[] roundMap[i];
+			}
+			delete[] roundMap;
+
+			for (int i = 0; i < 3; i++) {
+				delete[] monsterArr[i];
+			}
+			delete monsterArr;
+
+			int a = failGame();
+			if (a == 1) {
+				return round2();
+			}
+			else if (a == 2) {
+				return mainMenu();
+			}
+			else if (a == 3) {
+				return scoreBoard();
+			}
+			else {
+				return exit_game();
+			}
+			break;
+		}
+		showMap(11, 20);
+		if (checkMap(11, 20)) {
+
+			for (int i = 0; i < 11; i++) {
+				delete[] roundMap[i];
+			}
+			delete[] roundMap;
+
+			for (int i = 0; i < 3; i++) {
+				delete[] monsterArr[i];
+			}
+			delete monsterArr;
+
+			clock_t end_clk = clock();
+
+			system("cls");
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+			gotoxy(46, 3);
+			cout << "Succeess";
+			gotoxy(40, 6);
+			cout << "Write your name! : ";
+			string s;
+			cin >> s;
+
+			ofstream os;
+			os.open("scoresheet2.txt", ios::app);
+			double interval = (end_clk - start_clk) / CLOCKS_PER_SEC;
+			os << s << ' ' << interval << '\n';
+			os.close();
+
+			int a = successGame();
+			if (a == 1) {
+				return round3();
+			}
+			else if (a == 2) {
+				return mainMenu();
+			}
+			else if (a == 3) {
+				return scoreBoard();
+			}
+			else {
+				return exit_game();
+			}
+			break;
+		}
+		Sleep(150);
+	}
 }
 
 void round3() {
-	cout << "ROUND3";
-}
+	countDown();
+	clock_t start_clk = clock();
+	system("cls");
+	setRound3Map(roundMap);
+	setRound3Monster(monsterArr);
+	showMap(21, 28);
+	while (1) {
+		if (!movePacMan(21, 28)) {
+			for (int i = 0; i < 21; i++) {
+				delete[] roundMap[i];
+			}
+			delete[] roundMap;
 
-bool compare(pair<string, int> p1, pair<string, int> p2) {
-	return p1.second < p2.second;
+			for (int i = 0; i < 4; i++) {
+				delete[] monsterArr[i];
+			}
+			delete monsterArr;
+
+			int a = failGame();
+			if (a == 1) {
+				return round3();
+			}
+			else if (a == 2) {
+				return mainMenu();
+			}
+			else if (a == 3) {
+				return scoreBoard();
+			}
+			else {
+				return exit_game();
+			}
+			break;
+		};
+		if (!moveMonster(21, 28)) {
+
+			for (int i = 0; i < 21; i++) {
+				delete[] roundMap[i];
+			}
+			delete[] roundMap;
+
+			for (int i = 0; i < 4; i++) {
+				delete[] monsterArr[i];
+			}
+			delete monsterArr;
+
+			int a = failGame();
+			if (a == 1) {
+				return round3();
+			}
+			else if (a == 2) {
+				return mainMenu();
+			}
+			else if (a == 3) {
+				return scoreBoard();
+			}
+			else {
+				return exit_game();
+			}
+			break;
+		}
+		showMap(21, 28);
+		if (checkMap(21, 28)) {
+
+			for (int i = 0; i < 21; i++) {
+				delete[] roundMap[i];
+			}
+			delete[] roundMap;
+
+			for (int i = 0; i < 4; i++) {
+				delete[] monsterArr[i];
+			}
+			delete monsterArr;
+
+			clock_t end_clk = clock();
+
+			system("cls");
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+			gotoxy(46, 3);
+			cout << "Succeess";
+			gotoxy(40, 6);
+			cout << "Write your name! : ";
+			string s;
+			cin >> s;
+
+			ofstream os;
+			os.open("scoresheet3.txt", ios::app);
+			double interval = (end_clk - start_clk) / CLOCKS_PER_SEC;
+			os << s << ' ' << interval << '\n';
+			os.close();
+
+			int a = successGame();
+			if (a == 1) {
+				return mainMenu();
+			}
+			else if (a == 2) {
+				return mainMenu();
+			}
+			else if (a == 3) {
+				return scoreBoard();
+			}
+			else {
+				return exit_game();
+			}
+			break;
+		}
+		Sleep(80);
+	}
 }
 
 void scoreBoard() {
 	system("cls");
 	ifstream is;
+
 	is.open("scoresheet1.txt");
 	string s;
 	int a;
@@ -537,7 +926,7 @@ void scoreBoard() {
 	}
 	is.close();
 	sort(v.begin(), v.end(), compare);
-	int len = min(v.size(), 5);
+	int len = min(v.size()-1, 5);
 	
 	ofstream os;
 	os.open("scoresheet1.txt");
@@ -549,6 +938,44 @@ void scoreBoard() {
 	os.close();
 
 	v.clear();
+
+	is.open("scoresheet2.txt");
+	while (!is.eof()) {
+		is >> s >> a;
+		v.push_back({ s,a });
+
+	}
+	is.close();
+	sort(v.begin(), v.end(), compare);
+	len = min(v.size()-1, 5);
+
+	os.open("scoresheet2.txt");
+	cout << "Round2\n";
+	for (int i = 0; i < len; i++) {
+		os << v[i].first << ' ' << v[i].second << '\n';
+		cout << v[i].first << ' ' << v[i].second << '\n';
+	}
+	os.close();
+
+	v.clear();
+
+	is.open("scoresheet3.txt");
+	while (!is.eof()) {
+		is >> s >> a;
+		v.push_back({ s,a });
+
+	}
+	is.close();
+	sort(v.begin(), v.end(), compare);
+	len = min(v.size() - 1, 5);
+
+	os.open("scoresheet3.txt");
+	cout << "Round3\n";
+	for (int i = 0; i < len; i++) {
+		os << v[i].first << ' ' << v[i].second << '\n';
+		cout << v[i].first << ' ' << v[i].second << '\n';
+	}
+	os.close();
 
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 	gotoxy(46, 3);
@@ -601,18 +1028,18 @@ void mainMenu() {
 		int inputNum = _getch();
 		switch (inputNum) {
 		case 49:
-			round1();
+			return round1();
 			break;
 		case 50:
-			round2();
+			return round2();
 			break;
 		case 51:
-			round3();
+			return round3();
 			break;
 		case 52:
-			scoreBoard();
+			return scoreBoard();
 		case 53:
-			exit_game();
+			return exit_game();
 			break;
 		default:
 			checkMenu = true;
@@ -648,7 +1075,5 @@ int main() {
 	system(" mode  con lines=30   cols=100 "); //콘솔창 크키 바꾸기
 	startMenu(); //Pac-Man 출력
 	mainMenu(); //선택화면 표시
-
-	int a; cin >> a;
 }
 
