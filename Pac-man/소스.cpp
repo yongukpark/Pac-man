@@ -7,6 +7,7 @@
 #include <vector>
 #include <utility>
 #include <algorithm>
+#include <random>
 
 void mainMenu();
 void exit_game();
@@ -154,19 +155,19 @@ const char round3Map[21][29] = {
 	"1000000000000000000000000001",
 	"1011110110111111110110111101",
 	"1011110110111111110110111101",
-	"1000000110000110000110000001",
-	"1111110111110110111110111111",
-	"1111110111110110111110111111",
-	"1111110110404040400110111111",
+	"1000004110000110000114000001",
+	"1110110111110110111110110111",
+	"1110110111110110111110110111",
+	"1110000110000000000110000111",
 	"1111110110110110110110111111",
 	"1111110110100000010110111111",
 	"1111110000100000010000111111",
 	"1111110110100000010110111111",
 	"1111110110111111110110111111",
-	"1111110110000200000110111111",
-	"1111110111110110111110111111",
-	"1111110111110110111110111111",
-	"1000000110000110000110000001",
+	"1110000110000200000110000111",
+	"1110110111110110111110110111",
+	"1110110111110110111110110111",
+	"1000004110000110000110000001",
 	"1011110110111111110110111101",
 	"1011110110111111110110111101",
 	"1000000000000000000000000001",
@@ -176,10 +177,10 @@ const char round3Map[21][29] = {
 void setRound3Map(char** &roundMap){
 	roundMap = new char* [21];
 	for (int i = 0; i < 21; i++) {
-		roundMap[i] = new char[29];
+		roundMap[i] = new char[28];
 	}
 	for (int i = 0; i < 21; i++) {
-		for (int j = 0; j < 29; j++) {
+		for (int j = 0; j < 28; j++) {
 			roundMap[i][j] = round3Map[i][j];
 		}
 	}
@@ -199,19 +200,22 @@ void setRound3Monster(int**& arr) {
 	for (int i = 0; i < 4; i++) {
 		arr[i] = new int[2];
 	}
-	arr[0][0] = 7;
-	arr[0][1] = 10;
-	arr[1][0] = 7;
-	arr[1][1] = 12;
-	arr[2][0] = 7;
-	arr[2][1] = 14;
-	arr[3][0] = 7;
-	arr[3][1] = 16;
+	arr[0][0] = 16;
+	arr[0][1] = 6;
+	arr[1][0] = 4;
+	arr[1][1] = 6;
+	arr[2][0] = 4;
+	arr[2][1] = 21;
+	arr[3][0] = 16;
+	arr[3][1] = 21;
 	monsterNum = 4;
 }
 
 // 게임 플레이 요소
 void showMap(const int x, const int y) {
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+	gotoxy(80, 5);
+	cout << "방향키 : Q W E R";
 	for (int row = 0; row < x; row++) { 
 		gotoxy(start_x-2, start_y-1 + row);
 		for (int col = 0; col < y; col++) {
@@ -244,8 +248,8 @@ void showMap(const int x, const int y) {
 }
 
 bool checkMap(const int x, const int y) {
-	for (int i = 1; i < x - 1; i++) {
-		for (int j = 1; j < y - 1; j++) {
+	for (int i = 0; i < x; i++) {
+		for (int j = 0; j < y; j++) {
 			if (roundMap[i][j] == '0') {
 				return false;
 			}
@@ -327,10 +331,17 @@ bool movePacMan(const int x, const int y) {
 }
 
 bool moveMonster(const int x, const int y) {
-	srand(time(0));
+	random_device rd;
+	mt19937 gen(rd());
+	uniform_int_distribution<int> dis(0, 3);
 	for (int i = 0; i < monsterNum; i++) {
+		int repeatCount = 0;
 		while (1) {
-			int a = rand() % 4;
+			repeatCount++;
+			if (repeatCount == 50) {
+				break;
+			}
+			int a = dis(gen);
 			if (a == 0) {
 				if ((monsterArr[i][0] - 1) >= 1) {
 					if (roundMap[monsterArr[i][0] - 1][monsterArr[i][1]] == '0' || roundMap[monsterArr[i][0] - 1][monsterArr[i][1]] == '9') {
@@ -462,6 +473,9 @@ bool moveMonster(const int x, const int y) {
 
 void countDown() {
 	system("cls");
+
+	gotoxy(80, 5);
+	cout << "방향키 : Q W E R";
 	gotoxy(47, 10);
 	cout << " _____ ";
 	gotoxy(47, 11);
@@ -475,7 +489,11 @@ void countDown() {
 	gotoxy(47, 15);
 	cout << "＼____/ ";
 	Sleep(1000);
+
 	system("cls");
+
+	gotoxy(80, 5);
+	cout << "방향키 : Q W E R";
 	gotoxy(47, 10);
 	cout << "  _____ ";
 	gotoxy(47, 11);
@@ -490,6 +508,9 @@ void countDown() {
 	cout << "＼_____/";
 	Sleep(1000);
 	system("cls");
+
+	gotoxy(80, 5);
+	cout << "방향키 : Q W E R";
 	gotoxy(47, 10);
 	cout << "  __  ";
 	gotoxy(47, 11);
@@ -687,7 +708,7 @@ void round1() {
 			}
 			break;
 		}
-		Sleep(200);
+		Sleep(100);
 	}
 }
 
@@ -797,7 +818,7 @@ void round2() {
 			}
 			break;
 		}
-		Sleep(150);
+		Sleep(80);
 	}
 }
 
@@ -907,7 +928,7 @@ void round3() {
 			}
 			break;
 		}
-		Sleep(80);
+		Sleep(50);
 	}
 }
 
@@ -915,6 +936,18 @@ void scoreBoard() {
 	system("cls");
 	ifstream is;
 
+	gotoxy(45, 3);
+	cout << "Scoreboard";
+	gotoxy(24, 7);
+	cout << "1st";
+	gotoxy(24, 8);
+	cout << "2nd";
+	gotoxy(24, 9);
+	cout << "3rd";
+	gotoxy(24, 10);
+	cout << "4th";
+	gotoxy(24, 11);
+	cout << "5th";
 	is.open("scoresheet1.txt");
 	string s;
 	int a;
@@ -930,10 +963,13 @@ void scoreBoard() {
 	
 	ofstream os;
 	os.open("scoresheet1.txt");
-	cout << "Round1\n";
+	gotoxy(33, 5);
+	cout << "Round1";
 	for (int i = 0; i < len; i++) {
+		gotoxy(30, 7 + i);
 		os << v[i].first << ' ' << v[i].second << '\n';
-		cout << v[i].first << ' ' << v[i].second << '\n';
+		
+		cout << setw(5) << v[i].first << ' ' << v[i].second;
 	}
 	os.close();
 
@@ -950,10 +986,12 @@ void scoreBoard() {
 	len = min(v.size()-1, 5);
 
 	os.open("scoresheet2.txt");
-	cout << "Round2\n";
+	gotoxy(47, 5);
+	cout << "Round2";
 	for (int i = 0; i < len; i++) {
+		gotoxy(45, 7 + i);
 		os << v[i].first << ' ' << v[i].second << '\n';
-		cout << v[i].first << ' ' << v[i].second << '\n';
+		cout << setw(5) << v[i].first << ' ' << v[i].second;
 	}
 	os.close();
 
@@ -970,19 +1008,19 @@ void scoreBoard() {
 	len = min(v.size() - 1, 5);
 
 	os.open("scoresheet3.txt");
-	cout << "Round3\n";
+	gotoxy(62, 5);
+	cout << "Round3";
 	for (int i = 0; i < len; i++) {
+		gotoxy(60, 7 + i);
 		os << v[i].first << ' ' << v[i].second << '\n';
-		cout << v[i].first << ' ' << v[i].second << '\n';
+		cout << setw(5) << v[i].first << ' ' << v[i].second;
 	}
 	os.close();
 
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
-	gotoxy(46, 3);
-	cout << "Scoreboard";
-	gotoxy(70, 8);
+	gotoxy(80, 11);
 	cout << "1.Main menu";
-	gotoxy(70, 9);
+	gotoxy(80, 12);
 	cout << "2.Exit";
 
 	bool checkMenu = true;
