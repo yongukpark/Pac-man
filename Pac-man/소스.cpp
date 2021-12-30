@@ -1630,6 +1630,7 @@ void scoreBoard() {
 	cout << "4th";
 	gotoxy(24, 11);
 	cout << "5th";
+
 	is.open("scoresheet1.txt");
 	string s;
 	int a;
@@ -1847,3 +1848,4 @@ int main() {
 	startMenu(); //Pac-Man 출력
 	mainMenu(); //선택화면 표시
 }
+
